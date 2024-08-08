@@ -28,18 +28,41 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       appBar: AppBar(
         title: const Text('Add Todo'),
       ),
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              TodoModel todo = TodoModel(
-                  id: const Uuid().v4(),
-                  title: 'Hello',
-                  description: '123',
-                  isCompleted: false);
-              context.read<TodoBloc>().add(AddTodo(todo));
-              Navigator.of(context).pop();
-            },
-            child: Text("Add todo")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final todo = TodoModel(
+                      id: Uuid().v4(),
+                      title: _titleController.text,
+                      description: _descriptionController.text,
+                      isCompleted: false,
+                    );
+                    context.read<TodoBloc>().add(AddTodo(todo));
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('Add Todo'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
