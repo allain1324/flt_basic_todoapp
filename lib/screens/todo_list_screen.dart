@@ -18,30 +18,31 @@ class TodoListScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Todo List'),
           ),
-          // body: BlocBuilder<TodoBloc, TodoState>(
-          //   builder: (contextData, stateData) {
-          //     if (stateData is TodoLoadInProgress) {
-          //       return const Center(child: CircularProgressIndicator());
-          //     } else if (stateData is TodoLoadSuccess) {
-          //       print('state: ${stateData.todos}');
-          //       return ListView.builder(
-          //         itemCount: stateData.todos.length,
-          //         itemBuilder: (context, index) {
-          //           return TodoItem(todo: stateData.todos[index]);
-          //         },
-          //       );
-          //     } else {
-          //       return const Center(child: Text('Failed to load todos'));
-          //     }
-          //   },
-          // ),
+          body: BlocBuilder<TodoBloc, TodoState>(
+            builder: (contextData, stateData) {
+              if (stateData is TodoLoadInProgress) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (stateData is TodoLoadSuccess) {
+                print('state: ${stateData.todos}');
+                return ListView.builder(
+                  itemCount: stateData.todos.length,
+                  itemBuilder: (context, index) {
+                    return TodoItem(todo: stateData.todos[index]);
+                  },
+                );
+              } else {
+                return const Center(child: Text('Failed to load todos'));
+              }
+            },
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               print('Navigator $stateData');
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => BlocProvider.value(
-                    value: context.read<TodoBloc>(),
+                    value: BlocProvider.of<TodoBloc>(
+                        contextData), // Pass the existing TodoBloc instance
                     child: const AddTodoScreen(),
                   ),
                 ),

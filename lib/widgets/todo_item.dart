@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftl_basic_todoapp/blocs/todo_bloc.dart';
@@ -17,7 +18,7 @@ class TodoItem extends StatelessWidget {
         return ListTile(
           title: Text(todo.title),
           subtitle: Text(todo.description),
-          trailing: Checkbox(
+          leading: Checkbox(
             value: todo.isCompleted,
             onChanged: (bool? value) {
               final updatedTodo = TodoModel(
@@ -29,11 +30,20 @@ class TodoItem extends StatelessWidget {
               contextData.read<TodoBloc>().add(UpdateTodo(updatedTodo));
             },
           ),
+          trailing: GestureDetector(
+            onTap: () {
+              contextData.read<TodoBloc>().add(DeleteTodo(todo.id));
+            },
+            child: Icon(Icons.delete),
+          ),
           onTap: () {
-            Navigator.push(
-              context,
+            Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => EditTodoScreen(todo: todo),
+                builder: (context) => BlocProvider.value(
+                  value: BlocProvider.of<TodoBloc>(
+                      contextData), // Pass the existing TodoBloc instance
+                  child: EditTodoScreen(todo: todo),
+                ),
               ),
             );
           },

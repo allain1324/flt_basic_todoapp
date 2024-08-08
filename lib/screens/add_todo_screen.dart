@@ -24,55 +24,23 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final todoBloc = BlocProvider.of<TodoBloc>(context);
-    print('TodoBloc123: $todoBloc'); // Check if the Bloc is found
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Todo'),
       ),
-      body: Text('Add Todo Screen'),
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              TodoModel todo = TodoModel(
+                  id: const Uuid().v4(),
+                  title: 'Hello',
+                  description: '123',
+                  isCompleted: false);
+              context.read<TodoBloc>().add(AddTodo(todo));
+              Navigator.of(context).pop();
+            },
+            child: Text("Add todo")),
+      ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: const Text('Add Todo'),
-  //     ),
-  //     body: Padding(
-  //       padding: const EdgeInsets.all(16.0),
-  //       child: Form(
-  //         key: _formKey,
-  //         child: Column(
-  //           children: [
-  //             TextFormField(
-  //               controller: _titleController,
-  //               decoration: const InputDecoration(labelText: 'Title'),
-  //             ),
-  //             TextFormField(
-  //               controller: _descriptionController,
-  //               decoration: const InputDecoration(labelText: 'Description'),
-  //             ),
-  //             ElevatedButton(
-  //               onPressed: () {
-  //                 if (_formKey.currentState!.validate()) {
-  //                   final todo = TodoModel(
-  //                     id: Uuid().v4(),
-  //                     title: _titleController.text,
-  //                     description: _descriptionController.text,
-  //                     isCompleted: false,
-  //                   );
-  //                   context.read<TodoBloc>().add(AddTodo(todo));
-  //                   Navigator.of(context).pop();
-  //                 }
-  //               },
-  //               child: const Text('Add Todo'),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }
